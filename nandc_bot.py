@@ -54,6 +54,7 @@ class NoughtsAndCrosses:
         }
         self.remaining_sections = ["TL", "TM", "TR", "ML", "MM", "MR", "BL", "BM", "BR"]
         self.mapping = {"x": None, "o": None}
+        self.registered = False
 
 
     def print_grid(self):
@@ -146,62 +147,42 @@ class NoughtsAndCrosses:
             move = random.choice(self.remaining_sections)
 
         self.grid[move] = self.player_choices["bot_weapon"]
+        self.remaining_sections.remove(move)
 
 
     def check_intervals(self):
-        counter = 0
-        for section in self.grid:
-            if self.grid[section] == " ":
-                pass
-            else:
-                counter += 1
-        if counter == 9:
-            for way in self.ways_to_win:
-                k = 0
-                m = 0
-                for sections in self.ways_to_win[way]:
-                    if self.grid[sections] == "x":
-                        k += 1
-                    elif self.grid[sections] == "o":
-                        m += 1
-                    else:
-                        m = m
-                        k = k
-                if k == 3:
-                    print(f"{self.mapping.get('x')} has won")
-                    self.playing = False
-                    break
-                elif m == 3:
-                    print(f"{self.mapping.get('o')} has won")
-                    self.playing = False
-                    break
-                else:
-                    print("it's a tie")
-                    self.playing = False
-                    break
-
-        elif counter < 9:
-            for way in self.ways_to_win:
-                k = 0
-                m = 0
-                for sections in self.ways_to_win[way]:
-                    if self.grid[sections] == "x":
-                        k += 1
-                    elif self.grid[sections] == "o":
-                        m += 1
-                    else:
-                        m = m
-                        k = k
-                if k == 3:
-                    print(f"{self.mapping.get('x')} has won")
-                    self.playing = False
-                    break
-                elif m == 3:
-                    print(f"{self.mapping.get('o')} has won")
-                    self.playing = False
-                    break
-                else:
+        if self.playing:
+            counter = 0
+            for section in self.grid:
+                if self.grid[section] == " ":
                     pass
+                else:
+                    counter += 1
+            for way in self.ways_to_win:
+                x = 0
+                o = 0
+                for sections in self.ways_to_win[way]:
+                    if self.grid[sections] == "x":
+                        x += 1
+                    elif self.grid[sections] == "o":
+                        o += 1
+            
+                if x == 3:
+                    print(f"{self.mapping.get('x')} has won")
+                    self.playing = False
+                    break
+                elif o == 3:
+                    print(f"{self.mapping.get('o')} has won")
+                    self.playing = False
+                    break
+                else:
+                    if counter == 9:
+                        print("It's a tie")
+                        self.playing = False
+                        break
+                    elif counter < 9:
+                        pass 
+            
 
 
     def enter_selection(self):
@@ -222,6 +203,7 @@ class NoughtsAndCrosses:
                 else:
                     os.system("clear")
                     print("enter a correct or empty section")
+                    self.print_grid()
 
         elif not self.playing:
             self.check_intervals()
@@ -238,11 +220,8 @@ class NoughtsAndCrosses:
         elif not self.playing:
             self.check_intervals()
 
-
-    def play(self):
-        # registering players
-        registration = False
-        while not registration:
+    def registration(self):
+        while not self.registered:
             player1 = Player(str(input("p1 enter name: ")), str(input("x or o: ")).lower())
             if player1.wp == "x":
                 bot = Computer("o")
@@ -252,7 +231,7 @@ class NoughtsAndCrosses:
                 self.mapping[bot.wp] = bot.bot_name
                 self.player1name = player1.name
                 self.bot_name = bot.bot_name
-                registration = True
+                self.registered = True
 
 
             elif player1.wp == "o":
@@ -263,13 +242,18 @@ class NoughtsAndCrosses:
                 self.mapping[bot.wp] = bot.bot_name
                 self.player1name = player1.name
                 self.bot_name = bot.bot_name
-                registration = True
+                self.registered = True
             else:
                 print("please select either x or o")
 
+
+
+    def play(self):
         # game loop
         while self.playing:
+            self.registration()
             self.enter_selection()
+        
         else:
             self.print_grid()
             print("GAME FINISHED")
