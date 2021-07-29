@@ -1,12 +1,14 @@
-####ARYAN CHEGINI 2021
-##noughts and crosses game where you play against the computer
-##the computer has logic to determine whether it can make a winning move or prevent one from the opponent and can also plan ahead and make smart moves in order to give itself a chance to win
+# ARYAN CHEGINI 2021
+# noughts and crosses game where you play against the computer
+# the computer has logic to determine whether it can make a winning move or prevent one from the opponent and can
+# also plan ahead and make smart moves in order to give itself a chance to win
 
 import random
 import os
 import time
 
-#the computer class used to initiate the computers name
+
+# the computer class used to initiate the computers name
 class Computer:
     def __init__(self, bot_wp):
         self.bot_name = "b.o.b"
@@ -16,8 +18,7 @@ class Computer:
         return self.bot_name
 
 
-
-#the player class used to initiate the player's name
+# the player class used to initiate the player's name
 class Player:
     def __init__(self, player_name, weapon):
         self.name = player_name
@@ -27,9 +28,8 @@ class Player:
         return self.name
 
 
-
 class NoughtsAndCrosses:
-    #creating instance variables
+    # creating instance variables
     def __init__(self):
         self.grid = {
             "TL": " ", "TM": " ", "TR": " ",
@@ -41,7 +41,7 @@ class NoughtsAndCrosses:
         self.player_choices = {"player1weapon": None, "bot_weapon": None}
         self.player1name = None
         self.bot_name = None
-        #storing all the different possible ways there are to win
+        # storing all the different possible ways there are to win
         self.ways_to_win = {
             "row1": ["TL", "TM", "TR"],
             "row2": ["ML", "MM", "MR"],
@@ -56,7 +56,6 @@ class NoughtsAndCrosses:
         self.mapping = {"x": None, "o": None}
         self.registered = False
 
-
     def print_grid(self):
         output = f"""
 {self.grid["TL"]}|{self.grid["TM"]}|{self.grid["TR"]}
@@ -67,12 +66,11 @@ class NoughtsAndCrosses:
         """
         print(output)
 
-
     def computer(self):
         print("computing...")
         time.sleep(2)
 
-        #lists all possible moves it can make to either win the game or prevent the oppponent from winning
+        # lists all possible moves it can make to either win the game or prevent the opponent from winning
         win_moves = []
         defend_moves = []
         smart_move = []
@@ -93,8 +91,8 @@ class NoughtsAndCrosses:
             for sections in self.ways_to_win[way]:
                 hashing[way][sections] = self.grid.get(sections)
 
-        ## self check
-        #checking to see if it can make any winning moves
+        # self check
+        # checking to see if it can make any winning moves
         for way in self.ways_to_win:
             count = 0
             empty = 0
@@ -106,15 +104,15 @@ class NoughtsAndCrosses:
                     empty += 1
                     open_move.append(sections)
                 if count == 2 and empty == 1:
-                    #storing any winning moves into a list
+                    # storing any winning moves into a list
                     win_moves.append(open_move[0])
                 if count == 1 and empty == 2:
-                    #storing a smart move
+                    # storing a smart move
                     for item in open_move:
                         smart_move.append(item)
 
-        ## opp check
-        #checking to see if the opponent can make any winning moves
+        # opp check
+        # checking to see if the opponent can make any winning moves
         for way in self.ways_to_win:
             count = 0
             empty = 0
@@ -126,21 +124,21 @@ class NoughtsAndCrosses:
                     empty += 1
                     open_move.append(sections)
                 if count == 2 and empty == 1:
-                    #storing any opponent-winning moves into a list
+                    # storing any opponent-winning moves into a list
                     defend_moves.append(open_move[0])
                 if count == 1 and empty == 2:
-                    #storing a smart move
+                    # storing a smart move
                     for item in open_move:
                         smart_move.append(item)
 
         move = None
-        #a winning move outweighs preventing the opponent from winning
+        # a winning move outweighs preventing the opponent from winning
         if len(win_moves) == 1:
             move = random.choice(win_moves)
-        #however if there are no winning moves then it will prevent the opp from winning IF the oppponent can make any
+        # however if there are no winning moves then it will prevent the opp from winning IF the opponent can make any
         elif len(win_moves) == 0 and len(defend_moves) > 0:
             move = random.choice(defend_moves)
-        #if no one can make any winnning moves then it selects a random move from al the remaining sections on the main grid
+        # if no one can make any winning moves, it selects a random move from al the remaining sections on the main grid
         elif len(win_moves) == 0 and len(defend_moves) and len(smart_move) > 0:
             move = random.choice(smart_move)
         else:
@@ -148,7 +146,6 @@ class NoughtsAndCrosses:
 
         self.grid[move] = self.player_choices["bot_weapon"]
         self.remaining_sections.remove(move)
-
 
     def check_intervals(self):
         if self.playing:
@@ -166,7 +163,7 @@ class NoughtsAndCrosses:
                         x += 1
                     elif self.grid[sections] == "o":
                         o += 1
-            
+
                 if x == 3:
                     print(f"{self.mapping.get('x')} has won")
                     self.playing = False
@@ -181,9 +178,7 @@ class NoughtsAndCrosses:
                         self.playing = False
                         break
                     elif counter < 9:
-                        pass 
-            
-
+                        pass
 
     def enter_selection(self):
         p1input = False
@@ -233,7 +228,6 @@ class NoughtsAndCrosses:
                 self.bot_name = bot.bot_name
                 self.registered = True
 
-
             elif player1.wp == "o":
                 bot = Computer("x")
                 self.player_choices["player1weapon"] = player1.wp
@@ -246,14 +240,12 @@ class NoughtsAndCrosses:
             else:
                 print("please select either x or o")
 
-
-
     def play(self):
         # game loop
         while self.playing:
             self.registration()
             self.enter_selection()
-        
+
         else:
             self.print_grid()
             print("GAME FINISHED")
