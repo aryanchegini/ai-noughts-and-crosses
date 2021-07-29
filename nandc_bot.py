@@ -66,6 +66,30 @@ class NoughtsAndCrosses:
         """
         print(output)
 
+    def intro(self):
+        begin = False
+        print("""
+Welcome!
+In this game, you play against the infamous b.o.b, the robot whos terrible at noughts and crosses!🥲
+
+When asked to enter a section, please name and abbreviate the desired section correctly. For example, when naming your section
+always refer to the row first (top (t), middle (m), bottom (b)), then the column (left (l), middle(m), right(r)).
+
+When abbreviating, please use the letters provided next to the rows and columns above.
+
+Have a great time thrashing our b.o.b at it's favourite game.
+        
+
+To get started, hit enter!
+        """)
+        while not begin:
+            decision = str(input(">>>"))
+            if decision == "":
+                begin = True
+            
+
+            
+
     def computer(self):
         print("computing...")
         time.sleep(2)
@@ -243,6 +267,7 @@ class NoughtsAndCrosses:
     def play(self):
         # game loop
         while self.playing:
+            self.intro()
             self.registration()
             self.enter_selection()
 
